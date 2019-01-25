@@ -72,7 +72,6 @@ public class Affichage extends JFrame {
 			Connection con = DriverManager.getConnection(url, user, password);
 			Statement st = con.createStatement();
 			res = st.executeQuery(query);
-			System.out.println(query);
 			while(res.next()) {
 				Evenement e = new Evenement(res.getInt(1), res.getString(2), res.getString(3), res.getString(4));
 				evenements.add(e);
@@ -215,7 +214,7 @@ public class Affichage extends JFrame {
 		}
 	}
 	
-	public boolean Inscription(int id_membre, int id_event) {
+	public boolean Inscription(int id_event, int id_membre) {
 		final String driver = "com.mysql.cj.jdbc.Driver";
 		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 		final String user = "root";
@@ -238,13 +237,19 @@ public class Affichage extends JFrame {
 		}
 		catch(Exception e)
 		{
-			System.out.println("Erreur "+e.getMessage());
-			return false;
+			System.out.println(e.getMessage());
+			if(e.getMessage().equals("Duplicata du champ '12-2' pour la clef 'PRIMARY'"))
+			{
+				return false;
+			}
+			else
+			{
+				return false;
+			}
 		}
 	}
 	
 	public ArrayList<String> getEvents(int id) {
-		System.out.println("je rentre dans getEvents");
 		final String driver = "com.mysql.cj.jdbc.Driver";
 		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 		final String user = "root";
@@ -257,7 +262,6 @@ public class Affichage extends JFrame {
 			Class.forName(driver).newInstance();
 			Connection con = DriverManager.getConnection(url, user, password);
 			Statement st = con.createStatement();
-			System.out.println(query);
 			res = st.executeQuery(query);
 			while(res.next()) 
 			{
@@ -285,7 +289,6 @@ public class Affichage extends JFrame {
 		JTable table;
 		ArrayList<Evenement> evenements = new ArrayList<Evenement>();
 		evenements = afficheInfos();
-		System.out.println(evenements.get(0).toString());
 		Object rows[][] = new Object[evenements.size()][];
 		int index = 0;
 		for (int i = 0; i < rows.length; i++) {
@@ -414,7 +417,8 @@ public class Affichage extends JFrame {
 		JButton btnConsulter = new JButton("Consulter");
 		btnConsulter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ListeParticipants liste = new ListeParticipants( (int) table.getValueAt(table.getSelectedRow(), 0));
+				ListeParticipants liste = new ListeParticipants( (int) table.getValueAt(table.getSelectedRow(), 0), pseudo);
+				System.out.println(table.getValueAt(table.getSelectedRow(), 0));
 				dispose();
 			}
 		});
@@ -427,7 +431,8 @@ public class Affichage extends JFrame {
 		btnSinscrire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int id = getIdMembre(pseudo);
-				
+				System.out.println(id);
+				System.out.println(table.getValueAt(table.getSelectedRow(), 0));
 				if(Inscription((int) table.getValueAt(table.getSelectedRow(), 0), id )) {
 					lblInscription.setText("Inscription réussie.");
 				}
@@ -448,17 +453,9 @@ public class Affichage extends JFrame {
 		lblInscription.setBounds(657, 427, 220, 16);
 		contentPane.add(lblInscription);
 		
-		JLabel lblLesvnementsAuquels = new JLabel("Les \u00E9v\u00E9nements auxquels vous \u00EAtes inscrit");
-		lblLesvnementsAuquels.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lblLesvnementsAuquels.setBounds(33, 391, 301, 16);
-		if(rang.equals("1"))
-		{
-			contentPane.add(lblLesvnementsAuquels);
-		}
 		
 		JTable tableEvent;
 		int id = getIdMembre(pseudo);
-		System.out.println(id);
 		ArrayList<String> list = new ArrayList<String>();
 		list = getEvents(id);
 		Object ranges[][] = new Object[list.size()][];
@@ -470,15 +467,19 @@ public class Affichage extends JFrame {
 			ind ++;
 		}
 		
-		String column[] = {"Li"};
+		String column[] = {"Liste d'événements auxquels vous êtes inscrit"};
 		JScrollPane jspe;
 		DefaultTableModel mod = new DefaultTableModel(ranges, column);
 		
 		tableEvent = new JTable(mod);
+		jspe = new JScrollPane(tableEvent, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		jspe.setBounds(5, 390, 400, 150);
 		tableEvent.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		tableEvent.setLocation(10, 20);
-		jspe = new JScrollPane(tableEvent, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		jspe.setBounds(205, 54, 50, 50);
+		if(rang.equals("1"))
+		{
+			contentPane.add(jspe);
+		}
 		
 		
 		JButton btnModifier = new JButton("Modifier");
@@ -512,7 +513,6 @@ public class Affichage extends JFrame {
 				boolean success = DeleteEvent(id);
 				if(success) {
 					lblMessage.setText("Suppression effectuée.");
-					System.out.println(table.getRowCount());
 					table.remove(table.getSelectedRow());
 				}
 				else {

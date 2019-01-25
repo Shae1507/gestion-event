@@ -53,7 +53,6 @@ public class Connexion extends JFrame {
 			Class.forName(driver).newInstance();
 			Connection con = DriverManager.getConnection(url, user, password);
 			Statement st = con.createStatement();
-			System.out.println(query);
 			st.executeUpdate(query);
 			return message = "Opération réussie. Vous pouvez maintenant vous connecter.";
 		}
