@@ -5,25 +5,24 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import javax.swing.JPasswordField;
+import java.awt.SystemColor;
+import java.awt.Color;
 
 public class Connexion extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtPseudo;
-	private JTextField txtPseudoInscription;
-	private JTextField txtMail;
-	private JTextField txtNom;
-	private JTextField txtPrenom;
 	private JPasswordField passwordField;
 	private JLabel lblMessage;
-	private JPasswordField passwordFieldInscription;
-	private JLabel lblMessageInscription;
 
 	/**
 	 * Launch the application.
@@ -41,31 +40,10 @@ public class Connexion extends JFrame {
 		});
 	}
 	
-	public String Inscription(String pseudo, String email, String nom, String prenom, String mdp) {
-		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC"; 
-		final String user = "root";
-		final String password ="";
-		String query = "insert into membres(Pseudo, Email, Nom, Prenom, Mdp) VALUES ('" + pseudo + "', '" + email + "', '" + nom + "', '" + prenom + "', '" + mdp + "')";
-		String message = "";
-		
-		try {
-			Class.forName(driver).newInstance();
-			Connection con = DriverManager.getConnection(url, user, password);
-			Statement st = con.createStatement();
-			System.out.println(query);
-			st.executeUpdate(query);
-			return message = "Opération réussie. Vous pouvez maintenant vous connecter.";
-		}
-		catch (Exception e){
-			return message = "Une erreur est intervenue. Veuillez réessayer.";
-		}
-	}
-	
 	public String Verif(String pseudo, String mdp)
 	{
 		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+		final String url = "jdbc:mysql://localhost/m2l_bd1" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 		final String user = "root";
 		final String password ="";
 		String query = "select nom, rang from membres where pseudo = '"+pseudo+"' and mdp = '"+mdp+"' ";
@@ -93,38 +71,89 @@ public class Connexion extends JFrame {
 	public Connexion() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 600);
+		setSize(1550,1000);
 		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.window);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblEvnements = new JLabel("Ev\u00E9nements");
-		lblEvnements.setFont(new Font("Times New Roman", Font.BOLD, 30));
-		lblEvnements.setBounds(356, 13, 164, 30);
+		JLabel lblEvnements = new JLabel("Gestion des \u00E9v\u00E9nements");
+		lblEvnements.setForeground(new Color(255, 69, 0));
+		lblEvnements.setFont(new Font("Tahoma", Font.BOLD, 70));
+		lblEvnements.setBounds(317, 197, 927, 76);
 		contentPane.add(lblEvnements);
 		
-		JLabel lblSeConnecter = new JLabel("Se connecter :");
-		lblSeConnecter.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-		lblSeConnecter.setBounds(98, 103, 129, 16);
-		contentPane.add(lblSeConnecter);
+		JPanel panel = new JPanel();
+		panel.setBackground(SystemColor.window);
+		panel.setBounds(0, 0, 1532, 141);
+		contentPane.add(panel);
+		
+		JLabel lblImg = new JLabel("");
+		Image img = new ImageIcon(this.getClass().getResource("/bandeau.png")).getImage();
+		lblImg.setIcon(new ImageIcon(img));
+		panel.add(lblImg);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(SystemColor.activeCaption);
+		panel_1.setBounds(407, 319, 710, 508);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
 		
 		JLabel lblPseudo = new JLabel("Pseudo :");
-		lblPseudo.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		lblPseudo.setBounds(49, 150, 56, 16);
-		contentPane.add(lblPseudo);
+		lblPseudo.setBounds(195, 172, 86, 25);
+		panel_1.add(lblPseudo);
+		lblPseudo.setFont(new Font("Tahoma", Font.BOLD, 20));
+		
+		JLabel lblSeConnecter = new JLabel("Se connecter \u00E0 votre compte :");
+		lblSeConnecter.setBounds(64, 33, 605, 49);
+		panel_1.add(lblSeConnecter);
+		lblSeConnecter.setFont(new Font("Tahoma", Font.BOLD, 40));
 		
 		txtPseudo = new JTextField();
-		txtPseudo.setBounds(159, 147, 116, 22);
-		contentPane.add(txtPseudo);
+		txtPseudo.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		txtPseudo.setBounds(344, 169, 143, 36);
+		panel_1.add(txtPseudo);
 		txtPseudo.setColumns(10);
 		
+		passwordField = new JPasswordField();
+		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		passwordField.setBounds(344, 257, 143, 33);
+		panel_1.add(passwordField);
+		
 		JLabel lblMotDePasse = new JLabel("Mot de passe :");
-		lblMotDePasse.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		lblMotDePasse.setBounds(49, 235, 93, 16);
-		contentPane.add(lblMotDePasse);
+		lblMotDePasse.setBounds(136, 265, 165, 25);
+		panel_1.add(lblMotDePasse);
+		lblMotDePasse.setFont(new Font("Tahoma", Font.BOLD, 20));
 		
 		JButton btnEnvoyerConnexion = new JButton("Envoyer");
+		btnEnvoyerConnexion.setBounds(286, 392, 143, 52);
+		panel_1.add(btnEnvoyerConnexion);
+		btnEnvoyerConnexion.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		
+		lblMessage = new JLabel("");
+		lblMessage.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblMessage.setForeground(new Color(255, 0, 0));
+		lblMessage.setBounds(12, 457, 686, 38);
+		panel_1.add(lblMessage);
+		
+		JLabel lblNewLabel = new JLabel("Pas encore de compte ? Cr\u00E9ez-en un ici :");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel.setBounds(450, 855, 383, 31);
+		contentPane.add(lblNewLabel);
+		
+		JButton btnInscription = new JButton("Cr\u00E9er un compte");
+		btnInscription.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Inscription inscription = new Inscription();
+				inscription.setVisible(true);
+				dispose();
+			}
+		});
+		btnInscription.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnInscription.setBounds(871, 852, 201, 37);
+		contentPane.add(btnInscription);
+		
 		btnEnvoyerConnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String lePseudo = txtPseudo.getText();
@@ -148,89 +177,5 @@ public class Connexion extends JFrame {
 				}
 			}
 		});
-		btnEnvoyerConnexion.setBounds(98, 308, 97, 25);
-		contentPane.add(btnEnvoyerConnexion);
-		
-		JLabel lblSinscrire = new JLabel("S'inscrire :");
-		lblSinscrire.setFont(new Font("Times New Roman", Font.PLAIN, 20));
-		lblSinscrire.setBounds(532, 103, 93, 16);
-		contentPane.add(lblSinscrire);
-		
-		JLabel lblPseudoInscription = new JLabel("Pseudo : ");
-		lblPseudoInscription.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		lblPseudoInscription.setBounds(464, 150, 56, 16);
-		contentPane.add(lblPseudoInscription);
-		
-		txtPseudoInscription = new JTextField();
-		txtPseudoInscription.setBounds(594, 147, 116, 22);
-		contentPane.add(txtPseudoInscription);
-		txtPseudoInscription.setColumns(10);
-		
-		JLabel lblEmail = new JLabel("Email :");
-		lblEmail.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		lblEmail.setBounds(464, 201, 56, 16);
-		contentPane.add(lblEmail);
-		
-		JLabel lblNom = new JLabel("Nom :");
-		lblNom.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		lblNom.setBounds(464, 253, 56, 16);
-		contentPane.add(lblNom);
-		
-		JLabel lblPrnom = new JLabel("Pr\u00E9nom :");
-		lblPrnom.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		lblPrnom.setBounds(464, 308, 56, 16);
-		contentPane.add(lblPrnom);
-		
-		txtMail = new JTextField();
-		txtMail.setBounds(594, 198, 116, 22);
-		contentPane.add(txtMail);
-		txtMail.setColumns(10);
-		
-		txtNom = new JTextField();
-		txtNom.setBounds(594, 250, 116, 22);
-		contentPane.add(txtNom);
-		txtNom.setColumns(10);
-		
-		txtPrenom = new JTextField();
-		txtPrenom.setBounds(594, 309, 116, 22);
-		contentPane.add(txtPrenom);
-		txtPrenom.setColumns(10);
-		
-		JLabel lblMotDePasse_1 = new JLabel("Mot de passe : ");
-		lblMotDePasse_1.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		lblMotDePasse_1.setBounds(464, 368, 105, 16);
-		contentPane.add(lblMotDePasse_1);
-		
-		JButton btnEnvoyerInscription = new JButton("Envoyer");
-		btnEnvoyerInscription.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String lePseudo = txtPseudoInscription.getText();
-				String leMail = txtMail.getText();
-				String leNom = txtNom.getText();
-				String lePrenom = txtPrenom.getText();
-				String leMdp = passwordFieldInscription.getText();
-				
-				String message = Inscription(lePseudo, leMail, leNom, lePrenom, leMdp);
-				lblMessageInscription.setText(message);
-			}
-		});
-		btnEnvoyerInscription.setBounds(532, 434, 97, 25);
-		contentPane.add(btnEnvoyerInscription);
-		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(159, 232, 116, 22);
-		contentPane.add(passwordField);
-		
-		lblMessage = new JLabel("");
-		lblMessage.setBounds(31, 353, 377, 16);
-		contentPane.add(lblMessage);
-		
-		passwordFieldInscription = new JPasswordField();
-		passwordFieldInscription.setBounds(594, 365, 116, 22);
-		contentPane.add(passwordFieldInscription);
-		
-		lblMessageInscription = new JLabel("");
-		lblMessageInscription.setBounds(405, 503, 412, 16);
-		contentPane.add(lblMessageInscription);
 	}
 }

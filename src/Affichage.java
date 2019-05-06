@@ -7,6 +7,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,6 +26,7 @@ import com.mysql.cj.result.Row;
 
 import java.awt.Color;
 import javax.swing.border.LineBorder;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -60,7 +62,7 @@ public class Affichage extends JFrame {
 	
 	public ArrayList<Evenement> afficheInfos() {
 		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC"; 
+		final String url = "jdbc:mysql://localhost/m2l_bd1" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC"; 
 		final String user = "root";
 		final String password ="";
 		String query = "select * from evenements";
@@ -88,7 +90,7 @@ public class Affichage extends JFrame {
 	public boolean AjoutEvent(String nomEvent, String DateEvent, String nomOrga)
 	{
 		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+		final String url = "jdbc:mysql://localhost/m2l_bd1" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 		final String user = "root";
 		final String password ="";
 		
@@ -118,7 +120,7 @@ public class Affichage extends JFrame {
 	
 	public boolean UpdateEvent(String name_event, String date_event, String name_Orga, int id) {
 		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+		final String url = "jdbc:mysql://localhost/m2l_bd1" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 		final String user = "root";
 		final String password ="";
 		
@@ -145,7 +147,7 @@ public class Affichage extends JFrame {
 	
 	public boolean DeleteEvent(int id) {
 		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+		final String url = "jdbc:mysql://localhost/m2l_bd1" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 		final String user = "root";
 		final String password ="";
 		
@@ -169,7 +171,7 @@ public class Affichage extends JFrame {
 	
 	public int GetId(String name_event, String date_event, String nom_organisateur) {
 		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC"; 
+		final String url = "jdbc:mysql://localhost/m2l_bd1" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC"; 
 		final String user = "root";
 		final String password ="";
 		String query = "select id from evenements where name_event = '"+ name_event + "'  AND date_event = '" + date_event + "' AND nom_organisateur = '" + nom_organisateur +"' ";
@@ -193,7 +195,7 @@ public class Affichage extends JFrame {
 	public int getIdMembre(String pseudo) 
 	{
 		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+		final String url = "jdbc:mysql://localhost/m2l_bd1" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 		final String user = "root";
 		final String password ="";
 		ResultSet res;
@@ -217,7 +219,7 @@ public class Affichage extends JFrame {
 	
 	public boolean Inscription(int id_membre, int id_event) {
 		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+		final String url = "jdbc:mysql://localhost/m2l_bd1" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 		final String user = "root";
 		final String password ="";
 		
@@ -246,13 +248,13 @@ public class Affichage extends JFrame {
 	public ArrayList<String> getEvents(int id) {
 		System.out.println("je rentre dans getEvents");
 		final String driver = "com.mysql.cj.jdbc.Driver";
-		final String url = "jdbc:mysql://localhost/gestion_evenements" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
+		final String url = "jdbc:mysql://localhost/m2l_bd1" +"?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC";
 		final String user = "root";
 		final String password ="";
 		ResultSet res;
 		ArrayList<String> evenements = new ArrayList<String>();
 		
-		String query = "select distinct name_event from evenements, jonction, membres where jonction.id_membre = '" + id + "' AND jonction.id_evenement = evenements.id";
+		String query = "select distinct name_event from evenements, jonction where jonction.id_membre = " + id + " AND jonction.id_evenement = evenements.id";
 		try {
 			Class.forName(driver).newInstance();
 			Connection con = DriverManager.getConnection(url, user, password);
@@ -267,6 +269,7 @@ public class Affichage extends JFrame {
 			return evenements;
 		}
 		catch(Exception e) {
+			e.printStackTrace();
 			return new ArrayList<String>();
 		}
 	}
@@ -276,8 +279,9 @@ public class Affichage extends JFrame {
 	 */
 	public Affichage(String rang, String pseudo) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 600);
+		setSize(1550,1000);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
@@ -287,15 +291,13 @@ public class Affichage extends JFrame {
 		evenements = afficheInfos();
 		System.out.println(evenements.get(0).toString());
 		Object rows[][] = new Object[evenements.size()][];
-		int index = 0;
 		for (int i = 0; i < rows.length; i++) {
-			rows[index] = new Object[] {
+			rows[i] = new Object[] {
 					evenements.get(i).getId(),
 					evenements.get(i).getName_event(),
 					evenements.get(i).getDate_event(),
 					evenements.get(i).getNom_organisateur()
 			};
-			index ++;
 		}
 		
 		String columns[] = {"ID", "Nom evenement", "Date evenement", "Nom Organisateur"};
@@ -317,14 +319,17 @@ public class Affichage extends JFrame {
 		
 		table = new JTable(model);
 		jsp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		jsp.setBounds(5, 54, 872, 324);
-		table.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		jsp.setBounds(45, 273, 1438, 345);
+		table.getTableHeader().setFont(new Font("Tahoma", Font.ITALIC, 20));
+		table.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		table.setRowHeight(20);
 		table.setLocation(10, 20);
 		//setSize(150,100);
 		contentPane.add(jsp);
 		
 		JButton btnDconnexion = new JButton("D\u00E9connexion");
-		btnDconnexion.setBounds(766, 515, 111, 25);
+		btnDconnexion.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		btnDconnexion.setBounds(1338, 879, 158, 44);
 		btnDconnexion.setForeground(SystemColor.windowBorder);
 		btnDconnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -336,44 +341,51 @@ public class Affichage extends JFrame {
 		contentPane.add(btnDconnexion);
 		
 		JLabel lblNomEvenement = new JLabel("Nom Evenement : ");
-		lblNomEvenement.setBounds(12, 457, 111, 16);
+		lblNomEvenement.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNomEvenement.setBounds(74, 742, 166, 25);
 		if(rang.equals("2")) {
 			contentPane.add(lblNomEvenement);
 		}
 		txtNameEvent = new JTextField();
-		txtNameEvent.setBounds(117, 454, 116, 22);
+		txtNameEvent.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		txtNameEvent.setBounds(252, 742, 148, 26);
 		if(rang.equals("2")) {
 			contentPane.add(txtNameEvent);
 		}
 		txtNameEvent.setColumns(10);
 		
 		JLabel lblDateEvenement = new JLabel("Date evenement :");
-		lblDateEvenement.setBounds(245, 457, 111, 16);
+		lblDateEvenement.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblDateEvenement.setBounds(437, 745, 190, 19);
 		if(rang.equals("2")) {
 			contentPane.add(lblDateEvenement);
 		}
 		
 		txtDateEvent = new JTextField();
-		txtDateEvent.setBounds(351, 454, 116, 22);
+		txtDateEvent.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		txtDateEvent.setBounds(625, 744, 148, 26);
 		if(rang.equals("2")) {
 			contentPane.add(txtDateEvent);
 		}
 		txtDateEvent.setColumns(10);
 		
 		JLabel lblNomOrganisateur = new JLabel("Nom Organisateur :");
-		lblNomOrganisateur.setBounds(479, 457, 127, 16);
+		lblNomOrganisateur.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNomOrganisateur.setBounds(803, 746, 184, 21);
 		if(rang.equals("2")) {
 			contentPane.add(lblNomOrganisateur);
 		}
 		
 		txtNameOrga = new JTextField();
-		txtNameOrga.setBounds(597, 457, 116, 22);
+		txtNameOrga.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		txtNameOrga.setBounds(1007, 745, 148, 25);
 		if(rang.equals("2")) {
 			contentPane.add(txtNameOrga);
 		}
 		txtNameOrga.setColumns(10);
 		
 		JButton btnAjouter = new JButton("Ajouter");
+		btnAjouter.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnAjouter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String LeNomEvent = txtNameEvent.getText();
@@ -397,38 +409,37 @@ public class Affichage extends JFrame {
 				}
 			}
 		});
-		btnAjouter.setBounds(725, 457, 97, 25);
+		btnAjouter.setBounds(1206, 732, 127, 44);
 		if(rang.equals("2")) {
 			contentPane.add(btnAjouter);
 		}
 		
 		lblMessage = new JLabel("");
-		lblMessage.setBounds(12, 515, 701, 16);
+		lblMessage.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblMessage.setBounds(266, 915, 791, 25);
 		contentPane.add(lblMessage);
 		
-		JLabel lblEvenements = new JLabel("Evenements");
-		lblEvenements.setFont(new Font("Times New Roman", Font.BOLD, 30));
-		lblEvenements.setBounds(368, 13, 169, 25);
-		contentPane.add(lblEvenements);
-		
 		JButton btnConsulter = new JButton("Consulter");
+		btnConsulter.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnConsulter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ListeParticipants liste = new ListeParticipants( (int) table.getValueAt(table.getSelectedRow(), 0));
+				ListeParticipants liste = new ListeParticipants((int) table.getValueAt(table.getSelectedRow(), 0), pseudo);
+				liste.setVisible(true);
 				dispose();
 			}
 		});
-		btnConsulter.setBounds(259, 391, 97, 25);
+		btnConsulter.setBounds(884, 651, 130, 45);
 		if(rang.equals("2")) {
 			contentPane.add(btnConsulter);
 		}
 		
 		JButton btnSinscrire = new JButton("S'inscrire");
+		btnSinscrire.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnSinscrire.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int id = getIdMembre(pseudo);
 				
-				if(Inscription((int) table.getValueAt(table.getSelectedRow(), 0), id )) {
+				if(Inscription(id, (int) table.getValueAt(table.getSelectedRow(), 0) )) {
 					lblInscription.setText("Inscription réussie.");
 				}
 				else {
@@ -437,51 +448,63 @@ public class Affichage extends JFrame {
 				
 			}
 		});
-		btnSinscrire.setBounds(752, 391, 97, 25);
+		btnSinscrire.setBounds(1367, 632, 116, 44);
 		if(rang.equals("1")) {
 			contentPane.add(btnSinscrire);
 		}
 		
-		
-		
 		lblInscription = new JLabel("");
-		lblInscription.setBounds(657, 427, 220, 16);
+		lblInscription.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblInscription.setBounds(732, 915, 325, 25);
 		contentPane.add(lblInscription);
 		
 		JLabel lblLesvnementsAuquels = new JLabel("Les \u00E9v\u00E9nements auxquels vous \u00EAtes inscrit");
-		lblLesvnementsAuquels.setFont(new Font("Times New Roman", Font.BOLD, 15));
-		lblLesvnementsAuquels.setBounds(33, 391, 301, 16);
-		if(rang.equals("1"))
-		{
+		lblLesvnementsAuquels.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		lblLesvnementsAuquels.setBounds(111, 671, 399, 22);
+		if(rang.equals("1")){
 			contentPane.add(lblLesvnementsAuquels);
 		}
 		
 		JTable tableEvent;
 		int id = getIdMembre(pseudo);
 		System.out.println(id);
-		ArrayList<String> list = new ArrayList<String>();
-		list = getEvents(id);
+		ArrayList<String> list = getEvents(id);
+		System.out.println("list : " + list);
 		Object ranges[][] = new Object[list.size()][];
-		int ind = 0;
 		for (int i = 0; i < ranges.length; i++) {
-			ranges[ind] = new Object[] {
+			ranges[i] = new Object[] {
 					list.get(i)
 			};
-			ind ++;
 		}
 		
-		String column[] = {"Li"};
+		String column[] = {"Nom de l'événement"};
 		JScrollPane jspe;
 		DefaultTableModel mod = new DefaultTableModel(ranges, column);
+
+		contentPane.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 0, 1532, 122);
+		contentPane.add(panel);
+		
+		JLabel lblImg = new JLabel("");
+		Image img = new ImageIcon(this.getClass().getResource("/bandeau.png")).getImage();
+		lblImg.setIcon(new ImageIcon(img));
+		panel.add(lblImg);
 		
 		tableEvent = new JTable(mod);
-		tableEvent.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		tableEvent.setLocation(10, 20);
 		jspe = new JScrollPane(tableEvent, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		jspe.setBounds(205, 54, 50, 50);
-		
+		jspe.setBounds(12, 706, 594, 217);
+		tableEvent.getTableHeader().setFont(new Font("Tahoma", Font.ITALIC, 20));
+		tableEvent.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		tableEvent.setRowHeight(20);
+		tableEvent.setLocation(10, 20);
+		if(rang.equals("1")){
+		 	contentPane.add(jspe);
+		}
 		
 		JButton btnModifier = new JButton("Modifier");
+		btnModifier.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnModifier.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (table.isEditing()) {
@@ -500,12 +523,13 @@ public class Affichage extends JFrame {
 				}
 			}
 		});
-		btnModifier.setBounds(15, 391, 97, 25);
+		btnModifier.setBounds(1069, 651, 116, 44);
 		if(rang.equals("2")) {
 			contentPane.add(btnModifier);
 		}
 		
 		JButton btnSupprimer = new JButton("Supprimer");
+		btnSupprimer.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnSupprimer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int id = (int) table.getValueAt(table.getSelectedRow(), 0);
@@ -520,11 +544,17 @@ public class Affichage extends JFrame {
 				}
 			}
 		});
-		btnSupprimer.setBounds(136, 391, 97, 25);
+		btnSupprimer.setBounds(1242, 651, 136, 44);
 		
-		 if(rang.equals("2")){
+		if(rang.equals("2")){
 		 	contentPane.add(btnSupprimer);
-		 }
+		}
+
+	 	JLabel label = new JLabel("Gestion des \u00E9v\u00E9nements");
+	 	label.setForeground(new Color(255, 69, 0));
+	 	label.setFont(new Font("Tahoma", Font.BOLD, 70));
+	 	label.setBounds(406, 151, 927, 76);
+	 	contentPane.add(label);
 		 
 		setLocationRelativeTo(null);
 		setVisible(true);
